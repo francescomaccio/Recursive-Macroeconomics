@@ -1,0 +1,267 @@
+\documentclass[11pt]{article}
+
+% -------------------------------------------------
+% Packages
+% -------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\geometry{margin=1in}
+
+% -------------------------------------------------
+% Document
+% -------------------------------------------------
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Exercise 2.1 — Likelihood of Markov-Chain Histories}}\\[0.5em]
+    {\large Recursive Macroeconomic Theory}\\[0.25em]
+    {\normalsize Lars Ljungqvist and Thomas J. Sargent}
+\end{center}
+
+\vspace{1em}
+
+\section*{Problem}
+
+Consider the two-state Markov chain characterized by the transition matrix
+
+\[
+P =
+\begin{pmatrix}
+0.9 & 0.1 \\
+0.3 & 0.7
+\end{pmatrix},
+\]
+with initial distribution
+
+\[
+\pi_0 =
+\begin{pmatrix}
+0.5 \\
+0.5
+\end{pmatrix}.
+\]
+The observable variable \(y_t\) can take the values
+
+\[
+\bar y =
+\begin{pmatrix}
+1 \\
+5
+\end{pmatrix}.
+\]
+We compute the likelihood of the following observed histories for
+\(t=0,1,\ldots,4\):
+
+\begin{enumerate}[label=\alph*.]
+    \item \(1,5,1,5,1\)
+    \item \(1,1,1,1,1\)
+    \item \(5,5,5,5,5\)
+\end{enumerate}
+
+\section*{Relevant Theory}
+
+For a finite-state Markov chain with state history
+
+\[
+x_0,x_1,\ldots,x_T,
+\]
+the probability of observing the complete path is
+
+\[
+\Pr(x_0,x_1,\ldots,x_T)
+=
+\pi_0(x_0)
+\prod_{t=0}^{T-1}
+P_{x_t,x_{t+1}}.
+\]
+Thus, the likelihood of a particular history is obtained by multiplying
+
+\begin{itemize}
+    \item the probability of the initial state,
+    \item and the transition probabilities associated with each movement along the path.
+\end{itemize}
+In this exercise, the observable values uniquely identify the underlying states:
+
+\[
+y_t=1 \Longleftrightarrow x_t=0,
+\]
+and
+
+\[
+y_t=5 \Longleftrightarrow x_t=1.
+\]
+
+\section*{Analytical Solution}
+
+\subsection*{Part (a)}
+
+The observed history is
+
+\[
+(1,5,1,5,1),
+\]
+
+which corresponds to the state sequence
+
+\[
+(0,1,0,1,0).
+\]
+Its likelihood is therefore
+
+\[
+\begin{aligned}
+L_a
+&=
+\Pr(X_0=1)
+P_{01}
+P_{10}
+P_{01}
+P_{10} \\
+&=
+0.5
+\times 0.1
+\times 0.3
+\times 0.1
+\times 0.3.
+\end{aligned}
+\]
+Hence,
+
+\[
+\boxed{
+L_a = 0.00045
+}
+\]
+This history is relatively unlikely because it requires the chain to switch states at every period. In particular, the transition from state 0 to state 1 has probability only \(0.1\).
+
+\subsection*{Part (b)}
+
+The observed history is
+
+\[
+(1,1,1,1,1),
+\]
+which corresponds to
+
+\[
+(0,0,0,0,0).
+\]
+The likelihood is
+
+\[
+\begin{aligned}
+L_b
+&=
+\Pr(X_0=1)
+P_{00}^4 \\
+&=
+0.5(0.9)^4.
+\end{aligned}
+\]
+Therefore,
+
+\[
+\boxed{
+L_b = 0.32805
+}.
+\]
+This path is relatively likely because state 0 is highly persistent:
+
+\[
+P_{00}=0.9.
+\]
+
+\subsection*{Part (c)}
+
+The observed history is
+
+\[
+(5,5,5,5,5),
+\]
+corresponding to the state sequence
+
+\[
+(1,1,1,1,1).
+\]
+Its likelihood is
+
+\[
+\begin{aligned}
+L_c
+&=
+\Pr(X_0=1)
+P_{11}^4 \\
+&=
+0.5(0.7)^4.
+\end{aligned}
+\]
+Hence,
+
+\[
+\boxed{
+L_c = 0.12005
+}.
+\]
+State 1 is also persistent, but less so than state 0 because
+
+\[
+P_{11}=0.7 < P_{00}=0.9.
+\]
+Therefore,
+
+\[
+\boxed{
+L_b > L_c > L_a
+}.
+\]
+As we can see, the ranking reflects the transition matrix's persistence structure; indeed, remaining in state 0 is the most likely of the three histories, remaining in state 1 is less likely, and repeated switching between the two states is substantially less likely.
+
+\section*{Log-Likelihood Representation}
+
+For longer histories, multiplying many probabilities can lead to numerical underflow. It is therefore often convenient to work with the log-likelihood.
+In more detail, the path likelihood
+
+\[
+L
+=
+\pi_0(x_0)
+\prod_{t=0}^{T-1}
+P_{x_t,x_{t+1}}
+\]
+can be rewritten as
+
+\[
+\log L
+=
+\log \pi_0(x_0)
++
+\sum_{t=0}^{T-1}
+\log P_{x_t,x_{t+1}}.
+\]
+The original likelihood can then be recovered through
+
+\[
+L = \exp(\log L),
+\]
+which is a way more useful representation both in numerical and econometric applications.
+
+
+\section*{Extension}
+
+A natural computational extension is to simulate repeated histories from the Markov chain and compare their empirical frequencies with the theoretical path probabilities.
+
+This provides a direct numerical illustration of how the transition matrix determines state persistence first, path probabilities right afterwards, and lastly empirical frequencies.
+
+\section*{Reference}
+
+Ljungqvist, L. and Sargent, T. J. (2018).
+\textit{Recursive Macroeconomic Theory},
+4th edition, MIT Press.
+
+\end{document}
