@@ -59,7 +59,6 @@ The exercise is solved both analytically and computationally.
 - `solution.tex` — complete analytical derivation written in LaTeX
 - `solution.pdf` — compiled version of the analytical solution
 - `solution.py` — Python implementation of the likelihood calculations
-- `figures/` — figures generated for computational extensions
 
 The Python implementation is written in a general form so that the likelihood of an arbitrary observed history can be evaluated rather than hard-coding only the three paths considered in the exercise.
 
