@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+
+% -------------------------------------------------
+% Packages
+% -------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\geometry{margin=1in}
+
+% -------------------------------------------------
+% Document
+% -------------------------------------------------
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Exercise 2.2 — Transition Matrix from Conditional Expectations}}\\[0.5em]
+    {\large Recursive Macroeconomic Theory}\\[0.25em]
+    {\normalsize Lars Ljungqvist and Thomas J. Sargent}
+\end{center}
+
+\vspace{1em}
+
+\section*{Problem}
+
+Consider a two-state Markov chain and a random variable \(y_t=\bar{y}^{\top}x_t\) where
+
+\[
+\bar y =
+\begin{pmatrix}
+1 \\
+5
+\end{pmatrix}.
+\]
+It is known that \(E(y_{t+1}|x_t) = \begin{pmatrix}
+    1.8 \\
+    3.4
+\end{pmatrix}\) and that \(E(y_{t+1}^2|x_t) = \begin{pmatrix}
+    5.8\\
+    15.4
+\end{pmatrix}.\)
+
+We find a transition matrix consistent with these conditional expectations and determine whether the matrix is unique.
+
+
+\section*{Analytical Solution}
+
+For a two-state Markov chain, the transition matrix is 
+
+\[
+P = \begin{pmatrix}
+    p_{00} & p_{01} \\
+    p_{10} & p_{11}
+\end{pmatrix}
+\]
+By definition of \(P_{ij}= Pr(x_{t+1}=e_j | x_t = e_i)\), we know that \(p_{00} +p_{01}=1\) and that \(p_{10} + p_{11}= 1\).
+
+Furthermore, we know that the conditional expectation of a function of next period's state is 
+\[
+E(y_{t+1}|x_t)= P\bar{y}.
+\]
+This implies we have to solve the following system in matrix notation:
+
+\[
+\begin{pmatrix}
+    p_{00} & p_{01} \\
+    p_{10} & p_{11}
+\end{pmatrix}
+\begin{pmatrix}
+    1 \\
+    5
+\end{pmatrix}=\begin{pmatrix}
+    1.8 \\
+    3.4
+\end{pmatrix},
+\]
+which leads to the following transition matrix:
+
+\[
+P=
+\begin{pmatrix}
+    0.8 & 0.2 \\
+    0.4 & 0.6
+\end{pmatrix}.
+\]
+Note that, since the two state values are distinct, the row-sum restriction together with
+the conditional mean provides two linearly independent equations for the two
+unknown probabilities in each row. Therefore, the transition matrix is uniquely
+determined.
+
+Moreover, since \(P_{ij}>0\) for all \(i,j\), Theorem 2.2.1 implies that the
+Markov chain has a unique stationary distribution and is asymptotically stationary.
+
+Thus, we are only left with checking the second moment condition
+
+\[
+y^2 = \begin{pmatrix}
+    1^2 \\
+    5^2
+\end{pmatrix}= \begin{pmatrix}
+    1 \\
+    25
+\end{pmatrix}.
+\]
+Therefore,
+
+\[
+P \begin{pmatrix}
+    1 \\
+    25
+\end{pmatrix}= \begin{pmatrix}
+    0.8 + 5\\
+    0.4 + 15
+\end{pmatrix} = \begin{pmatrix}
+    5.8 \\
+    15.4
+\end{pmatrix}= E(y_{t+1}^2|x_t)
+\]
+
+
+\section*{Two-State Business-Cycle Model Extension}
+
+In Exercise 2.1, the transition matrix was treated as known and used to study
+the properties of the Markov chain. A natural econometric extension reverses
+the problem: instead of taking \(P\) as given, we seek to recover it from
+observable implications of the stochastic process. In empirical applications, however, conditional moments are estimated from
+finite samples and therefore need not satisfy the theoretical restrictions of
+the model exactly. This motivates a minimum-distance approach.
+
+In particular, think of the economy as being in either a recessionary regime or an expansionary regime, with \(y_t\) representing quarterly real GDP growth.
+
+Suppose we approximate GDP growth by two representative values:
+\[
+\bar{y} =\begin{pmatrix}
+    -2 \\
+    3
+\end{pmatrix}, 
+\]
+so state 0 means recession and state 1 means expansion. To be clear, these numbers are just illustrative rather than estimates from a particular dataset.
+
+Suppose that, in an empirical application, we obtained the following sample
+estimates of the conditional moments:
+\[
+E(y_{t+1}|x_t)=\begin{pmatrix}
+    -0.8 \\
+    2.4
+\end{pmatrix} \quad \text{and} \quad E(y_{t+1}^2|x_t)=\begin{pmatrix}
+    5.4 \\
+    8.1
+    \end{pmatrix}.
+\]
+Of course, these sample estimates may not satisfy the theoretical restrictions imposed by the Markov model exactly; this is prevented by sample variation. Thus, instead of demanding a P satisfying every equation exactly, we can look for the transition matrix that comes closest to matching all of the moments simultaneously.
+
+For each current state \(i\), we write
+\[
+q_i=P(x_{t+1}= \text{expansion}| x_t =i).
+\]
+Then, 
+
+\[P_{i,.} = (1-q_i, q_i), \]
+
+and, for any proposed \(q_i\), the model predicts 
+\[
+E(y_{t+1}|x_t)= (1-q_i)(-2) +q_i(3) \quad \text{and} \quad E(y_{t+1}^2|x_t)=(1-q_i)4+q_i9.
+\]
+We choose \(q_i\) to minimize 
+
+\[
+(E_{model}(y_{t+1}|x_t = i)-E_{data}(y_{t+1}|x_t=i))^2+(E_{model}(y_{t+1}^2|x_t = i)-E_{data}(y_{t+1}^2|x_t=i))^2,
+\]
+which is a simple minimum-distance estimator. In the Python companion of this exercise, we estimate the transition matrix to be
+
+\[
+\hat{P}=\begin{pmatrix}
+    0.74 & 0.26 \\
+    0.15 & 0.85
+\end{pmatrix}
+\]
+
+The estimated matrix implies that, conditional on being in a recession, the
+economy remains in recession with probability \(0.74\) and moves into expansion
+with probability \(0.26\). Conditional on being in an expansion, the expansion
+persists with probability \(0.85\). Unlike the exact solution to Exercise 2.2,
+\(\hat P\) does not reproduce every sample moment exactly; rather, it provides
+the transition matrix that best reconciles the two sets of noisy conditional
+moments according to the chosen minimum-distance criterion.
+
+\section*{Reference}
+
+Ljungqvist, L. and Sargent, T. J. (2018).
+\textit{Recursive Macroeconomic Theory},
+4th edition, MIT Press.
+
+\end{document}
