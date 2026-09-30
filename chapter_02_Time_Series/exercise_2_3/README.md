@@ -235,7 +235,7 @@ This distinction matters because the transition matrix determines:
 -   likelihoods of observed histories;
 -   posterior beliefs over competing models.
 
-The exercise therefore connects welfare analysis, time-series dynamics, likelihood methods, and Bayesian learning in a simple finite-state setting. :chatgpt-content-reference{index="9"}
+The exercise therefore connects welfare analysis, time-series dynamics, likelihood methods, and Bayesian learning in a simple finite-state setting. 
 
 ## Reference
 
