@@ -1,0 +1,682 @@
+\documentclass[11pt]{article}
+
+% -------------------------------------------------
+% Packages
+% -------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\geometry{margin=1in}
+
+% -------------------------------------------------
+% Document
+% -------------------------------------------------
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Exercise 2.3 — Markov Consumption Processes and Bayesian Model Comparison}}\\[0.5em]
+    {\large Recursive Macroeconomic Theory}\\[0.25em]
+    {\normalsize Lars Ljungqvist and Thomas J. Sargent}
+\end{center}
+
+\vspace{1em}
+
+\section*{Problem}
+
+Consumption is governed by an \(n\)-state Markov chain (\(P,\pi_0\)) where P is a stochastic matrix and \(\pi_0\) is an initial probability distribution. Consumption takes one of the values in the \(n\times1\) vector \(\bar{c}\). A consumer ranks stochastic processes of consumption \(t=0,1,\dots\) according to
+\[
+E\sum_{t=0}^\infty \beta^tu(c_t)
+\]
+where E is the mathematical expectation and \(u(c_t)=\frac{c^{1-\gamma}}{1-\gamma}\) for some parameter \(\gamma\geq1.\) Let \(u_i=u(\bar{c}_i)\), \(v_i=E[\sum_{t=0}^\infty\beta^tu(c_t)|x_0=\bar{e}_i]\), and \(V=Ev\), where \(\beta\in(0,1)\) is a discount factor. 
+
+\begin{enumerate}
+    \item Let u and v be the \(n\times1\) vectors whose \(i\)th component are \(u_i\) and \(v_i\), respectively. Verify the following formulas for v and V: \(v = (I-\beta P)^{-1}u\), and \(V = \sum_i\pi_{0,i}v_i\).
+
+    \item Consider the following two Markov processes:
+
+    Process 1: \(\pi_0=\begin{pmatrix}
+        0.5 \\
+        0.5
+    \end{pmatrix}\), \(P=\begin{pmatrix}
+        1 & 0\\
+        0 & 1
+    \end{pmatrix}\).
+
+    Process 2: \(\pi_0=\begin{pmatrix}
+        0.5 \\
+        0.5
+    \end{pmatrix}\), \(P=\begin{pmatrix}
+        0.5 & .5\\
+        0.5 & 0.5
+    \end{pmatrix}\).
+
+    For both Markov processes, \(\bar{c}=\begin{pmatrix}
+        1 \\
+        5
+    \end{pmatrix}\).
+
+    Assume that \(\gamma=2.5\), \(\beta=0.95\). Compute the unconditional discounted expected utility V for each of these processes. Which of the two processes does the consumer prefer? Redo the calculations for \(\gamma=4\). Now which process does the consumer prefer?
+    \item An econometrician observes a sample of 10 observations of consumption rates for our consumer. He knows that one of the two preceding Markov processes generates the data, but he does not know which one. He assigns equal “prior probability” to the two chains. Suppose that the 10 successive observations on consumption are as follows: 1,1,1,1,1,1,1,1,1,1. Compute the likelihood of this sample under process 1 and under process 2. Denote the likelihood function \(\text{Prob}(\text{data}|\text{Model}_i)\), \(i=1,2\).
+
+    \item Suppose that the econometrician uses Bayes’ law to revise his initial probability estimates for the two models, where in this context Bayes’ law states:
+
+    \[
+    \text{Prob}(M_i|\text{data})=\frac{\text{Prob}(\text{data}|M_i)\text{Prob}(M_i)}{\sum_j\text{Prob}(\text{data}|M_j)\text{Prob}(M_j)},
+    \]
+    where \(M_i\) denotes model \(i\) and the denominator is the unconditional probability of the data. After observing the data sample, what probabilities does the econometrician place on the two possible models?
+
+    \item Repeat the calculation in part d, but now assume that the data sample is 1,5,5,1,5,5,1,5,1,5.
+
+\end{enumerate}
+\section*{Derivation of the Formulas for v and V}
+
+We want to prove that \(v = (I-\beta P)^{-1}u\) and \(V = \sum_{i=1}^n\pi_{0i}v_i\). Recall that the Markov chain has states \(e_1, \dots, e_n\), transition matrix \(P\), and initial distribution \(\pi_0\). By definition of transition matrix, we have
+
+\[
+P_{ij}=\text{Pr}(x_{t+1}=e_j|x_t=e_i),
+\]
+so \(P^t\) contains the t-step transition probabilities.
+Let \(u=\begin{pmatrix}
+    u_1 \\
+    \vdots \\
+    u_n
+\end{pmatrix}\), and \(u_i=u(\bar{c}_i)\).
+
+By definition,
+\[
+v_i = E[\sum_{t=0}^\infty\beta^tu(c_t)|x_0=\bar{e}_i].
+\]
+We now derive a vector expression for \(v\). In particular, since \(\beta^t\) is deterministic,
+\[
+v_i = \sum_{t=0}^\infty\beta^tE[u(c_t)|x_0=\bar{e}_i],
+\]
+which follows from the linearity of the expectation operator. Therefore, to compute \(v_i\), it is enough to compute the conditional expected utility at every future date \(t\). Consumption takes the value \(\bar{c}_j\) whenever the Markov state is \(e_j\). Hence,
+\[
+u(c_t)=u_j \quad \text{if} \quad x_t=e_j.
+\]
+Thus \(u(c_t)\) is a function of the state. For this matter, we have a forecasting formula for a function of a Markov state. In particular,
+
+\[
+E[u(c_t)|x_0=e_i]= (P^tu)_i.
+\]
+We can substitute it into the definition of \(v_i\) to obtain
+\[
+v
+=
+\sum_{t=0}^{\infty}\beta^tP^tu
+=
+\left(I+\beta P+\beta^2P^2+\dotsb\right)u.
+\]
+Notice that we are dealing with a geometric series. To determine whether it converges, we have to verify that the spectral radius of \(\beta P\) is strictly less than one. Of course this is the case because P is a stochastic matrix, with its largest eigenvalue in absolute value being 1, while \(0<\beta<1\). Hence, the eigenvalues of \(\beta P\) have modulus strictly smaller than 1, so the series converges, meaning we can safely apply the matrix geometric-series formula as follows:
+
+\[
+v=(I-\beta P)^{-1}u.
+\]
+We now derive the formula for unconditional utility \(V\). By definition,
+\[
+V = Ev.
+\]
+More precisely, before observing \(x_0\), the initial state is random. We know that
+\[
+\text{Pr}(x_0=e_i)=\pi_{0i}.
+\]
+Conditional on \(x_0=e_i\), lifetime expected utility equals \(v_i\). Therefore, by simply applying the law of iterated expectations, we can write
+\[
+V=\sum_{i=1}^n\text{Pr}(x_0=e_i)E\bigg[\sum_{t=0}^\infty \beta^tu(c_t)|x_0=e_i \bigg]= \sum_{i=1}^n\pi_{0i}v_i,
+\]
+where the last equality followed from the definitions of \(\pi_{0i}\) and \(v_i\).
+
+\section*{Computational Solution}
+
+The remaining parts of the exercise are solved numerically in Python. The
+implementation constructs the two transition matrices, evaluates the discounted
+utility associated with each Markov process, computes the likelihood of the
+observed consumption histories, and finally applies Bayes' rule to update the
+probabilities assigned to the two competing models.
+
+\subsection*{Discounted Expected Utility}
+
+We first consider the two transition matrices
+
+\[
+P_1=
+\begin{pmatrix}
+1 & 0\\
+0 & 1
+\end{pmatrix},
+\qquad
+P_2=
+\begin{pmatrix}
+0.5 & 0.5\\
+0.5 & 0.5
+\end{pmatrix},
+\]
+with common initial distribution
+
+\[
+\pi_0=
+\begin{pmatrix}
+0.5\\
+0.5
+\end{pmatrix},
+\]
+and consumption vector
+
+\[
+\bar c=
+\begin{pmatrix}
+1\\
+5
+\end{pmatrix}.
+\]
+The Python implementation evaluates the CRRA utility vector
+
+\[
+u_i=\frac{\bar c_i^{1-\gamma}}{1-\gamma},
+\]
+and then computes the conditional lifetime-value vector from
+
+\[
+v=(I-\beta P)^{-1}u.
+\]
+The unconditional discounted expected utility is obtained as
+
+\[
+V=\pi_0'v.
+\]
+For $\beta=0.95$ and $\gamma=2.5$, the numerical output is
+
+\[
+u=
+\begin{pmatrix}
+-0.666667\\
+-0.059628
+\end{pmatrix}.
+\]
+For Process 1, Python returns
+
+\[
+v^{(1)}=
+\begin{pmatrix}
+-13.333333\\
+-1.192570
+\end{pmatrix},
+\qquad
+V_1=-7.262951.
+\]
+For Process 2, the corresponding output is
+
+\[
+v^{(2)}=
+\begin{pmatrix}
+-7.566471\\
+-6.959432
+\end{pmatrix},
+\qquad
+V_2=-7.262951.
+\]
+Thus,
+
+\[
+\boxed{V_1=V_2=-7.262951},
+\]
+meaning that the consumer is indifferent between the two processes from an ex ante perspective.
+
+It is nevertheless worth noticing that the conditional value vectors are
+substantially different; indeed, under Process 1, the transition matrix is the identity
+matrix, so the initial consumption state is permanent. A consumer who starts
+with consumption equal to $1$ remains in the low-consumption state forever,
+while a consumer who starts with consumption equal to $5$ remains permanently
+in the high-consumption state. This explains the large difference between the
+two components of $v^{(1)}$.
+
+Under Process 2, instead, next period's state is drawn with probability $0.5$
+from either state regardless of the current state. Consequently, the initial
+condition has a much smaller effect on lifetime utility, and the two components
+of $v^{(2)}$ are much closer to one another.
+
+Repeating the computation for $\gamma=4$ gives
+
+\[
+u=
+\begin{pmatrix}
+-0.333333\\
+-0.002667
+\end{pmatrix}.
+\]
+For Process 1,
+
+\[
+v^{(1)}=
+\begin{pmatrix}
+-6.666667\\
+-0.053333
+\end{pmatrix},
+\qquad
+V_1=-3.360000,
+\]
+whereas for Process 2,
+
+\[
+v^{(2)}=
+\begin{pmatrix}
+-3.525333\\
+-3.194667
+\end{pmatrix},
+\qquad
+V_2=-3.360000.
+\]
+Hence,
+
+\[
+\boxed{V_1=V_2=-3.360000}.
+\]
+Again, the consumer remains indifferent between the two processes.
+
+The equality of the unconditional values is not accidental. Under the initial
+distribution used in the exercise, both processes imply
+
+\[
+\Pr(c_t=1)=\Pr(c_t=5)=0.5
+\]
+at every date $t$. Therefore, the two models generate the same unconditional
+distribution of consumption in every period, even though they imply radically
+different serial dependence. Since preferences are additively separable over
+time,
+
+\[
+E\left[\sum_{t=0}^{\infty}\beta^t u(c_t)\right]
+=
+\sum_{t=0}^{\infty}\beta^t E[u(c_t)],
+\]
+and consequently the different degree of persistence does not affect the ex ante
+ranking in this particular exercise.
+
+\subsection*{Likelihood of the First Consumption Sample}
+
+The first observed sample is
+
+\[
+1,1,1,1,1,1,1,1,1,1.
+\]
+The observable consumption values are first mapped into the corresponding
+zero-indexed Markov states. Since consumption equal to $1$ corresponds to state
+$0$, the observed state path is
+\[
+(0,0,0,0,0,0,0,0,0,0).
+\]
+The same log-likelihood function introduced in Exercise 2.1 is then applied to
+both candidate transition matrices. The Python output is
+
+\[
+\log L_1=-0.693147,
+\qquad
+L_1=0.500000,
+\]
+for Process 1, and
+
+\[
+\log L_2=-6.931472,
+\qquad
+L_2=0.0009765625,
+\]
+for Process 2.
+
+Therefore,
+
+\[
+\boxed{
+\Pr(\text{data}\mid M_1)=0.5
+}
+\]
+and
+
+\[
+\boxed{
+\Pr(\text{data}\mid M_2)=0.0009765625
+}.
+\]
+
+The sample is much more likely under Process 1. This result follows directly
+from the different persistence properties of the two models. Under Process 1,
+once the chain starts in the low-consumption state, it remains there with
+probability one. Under Process 2, instead, remaining in the same state for nine
+successive transitions requires the realization of nine independent
+probability-$0.5$ events.
+
+The likelihood comparison therefore shows how observations on the time-series
+pattern of consumption can distinguish between stochastic processes that have
+the same unconditional distribution.
+
+\subsection*{Bayesian Updating}
+
+The econometrician initially assigns equal prior probabilities to the two models,
+
+\[
+\Pr(M_1)=\Pr(M_2)=0.5.
+\]
+Using the likelihoods computed above, the Python implementation applies Bayes'
+rule and returns
+
+\[
+\Pr(M_1\mid \text{data})=0.998051,
+\]
+and
+
+\[
+\Pr(M_2\mid \text{data})=0.001949.
+\]
+Thus,
+
+\[
+\boxed{
+\Pr(M_1\mid \text{data})\approx 99.8051\%
+}
+\]
+and
+
+\[
+\boxed{
+\Pr(M_2\mid \text{data})\approx 0.1949\%
+}.
+\]
+Ten consecutive observations of low consumption therefore provide very strong
+evidence in favor of the persistent model. Notice, however, that the posterior
+probability of Process 2 does not become exactly zero. A sequence of ten low
+observations is unlikely under Process 2, but it remains possible.
+
+This illustrates an important role of likelihood-based inference; that is, the
+econometrician does not compare the models according only to whether a sample
+is possible under each one, but according to how much probability each model
+assigns to the observed history.
+
+\subsection*{Second Consumption Sample}
+
+Finally, we consider the second observed history,
+
+\[
+1,5,5,1,5,5,1,5,1,5,
+\]
+which corresponds to the state path
+
+\[
+(0,1,1,0,1,1,0,1,0,1).
+\]
+The Python output gives
+
+\[
+L_1=0
+\]
+for Process 1, while
+
+\[
+L_2=0.0009765625
+\]
+for Process 2.
+
+Consequently, Bayes' rule yields
+
+\[
+\boxed{
+\Pr(M_1\mid\text{data})=0
+}
+\]
+and
+
+\[
+\boxed{
+\Pr(M_2\mid\text{data})=1
+}.
+\]
+The interpretation is immediate. Process 1 has transition matrix
+
+\[
+P_1=
+\begin{pmatrix}
+1&0\\
+0&1
+\end{pmatrix},
+\]
+so transitions between states have probability zero. The first observed
+transition from consumption $1$ to consumption $5$ is therefore sufficient to
+rule out Process 1 completely.
+
+This example highlights the distinction between an observation that is merely
+unlikely and one that is impossible under a model. The first data sample strongly
+favored Process 1 but did not rule out Process 2. The second sample, by contrast,
+contains transitions to which Process 1 assigns exactly zero probability, so its
+posterior probability collapses to zero.
+
+\section*{Computational Extensions}
+
+The exercise can be extended in several directions that provide additional
+economic interpretation. In particular, the two Markov processes have identical
+one-period unconditional consumption distributions but very different dynamic
+properties. This makes them useful for studying the distinction between
+cross-sectional risk and persistence over time.
+
+\subsection*{Sequential Bayesian Learning}
+
+The previous Bayesian calculation uses the complete sample at once. A natural
+extension is to update the posterior probabilities sequentially as each new
+observation becomes available.
+
+For the sample
+
+\[
+1,1,1,1,1,1,1,1,1,1,
+\]
+the Python implementation produces the following posterior probabilities for
+Process 1:
+
+\[
+\begin{array}{c|cc}
+\toprule
+\text{Number of observations} &
+\Pr(M_1\mid\text{data}) &
+\Pr(M_2\mid\text{data})\\
+\midrule
+1  & 0.500000 & 0.500000\\
+2  & 0.666667 & 0.333333\\
+3  & 0.800000 & 0.200000\\
+4  & 0.888889 & 0.111111\\
+5  & 0.941176 & 0.058824\\
+10 & 0.998051 & 0.001949\\
+\bottomrule
+\end{array}
+\]
+The first observation does not distinguish between the models because both
+assign probability $0.5$ to starting in the low-consumption state. However,
+every additional low-to-low transition provides new evidence in favor of the
+persistent process.
+
+This sequential interpretation is particularly relevant in macroeconomic
+applications. Suppose, for example, that the low-consumption state represents a
+household experiencing a negative income shock. A single low observation might
+be interpreted as a temporary disturbance. A long sequence of low observations,
+instead, progressively raises the probability that the household is affected by
+a highly persistent or permanent shock.
+
+The same logic applies to real-time macroeconomic inference, where policymakers
+continuously update beliefs about whether an observed slowdown is temporary or
+persistent as new data arrive.
+
+\subsection*{Persistence and Autocorrelation}
+
+A second extension computes the theoretical autocorrelation function of
+consumption.
+
+For Process 1, Python returns
+
+\[
+\rho_k=1
+\qquad
+\text{for }k=1,\ldots,5.
+\]
+For Process 2, the output is
+
+\[
+\rho_k=0
+\qquad
+\text{for }k=1,\ldots,5.
+\]
+Thus,
+
+\[
+\boxed{
+\operatorname{Corr}_{P_1}(c_t,c_{t+k})=1
+}
+\]
+while
+
+\[
+\boxed{
+\operatorname{Corr}_{P_2}(c_t,c_{t+k})=0
+}
+\]
+for every positive lag.
+
+The difference follows directly from the transition matrices. Under Process 1,
+the state never changes, so knowing current consumption perfectly predicts all
+future consumption. Under Process 2, both rows of the transition matrix are
+identical, so the distribution of next period's consumption does not depend on
+the current state.
+
+This distinction can be interpreted in terms of permanent versus transitory
+income risk. Two households may face exactly the same probability of having low
+income in any given year while facing very different risks over their lifetimes.
+If low income is highly persistent, current economic conditions contain much
+more information about future conditions than when shocks are purely
+transitory.
+
+Such persistence plays an important role in models of precautionary saving,
+consumption smoothing, incomplete markets, and household insurance.
+
+\subsection*{Expected Duration of Consumption States}
+
+Another useful measure of persistence is the expected duration of a spell in a
+given state. For a Markov state with persistence probability $P_{ii}$, the
+expected duration is
+
+\[
+E[D_i]=\frac{1}{1-P_{ii}},
+\]
+provided that $P_{ii}<1$.
+
+For Process 1, Python returns
+
+\[
+E[D_1]=E[D_2]=\infty.
+\]
+Both states are absorbing, so once a consumer enters either state, the consumer
+remains there forever.
+
+For Process 2,
+
+\[
+P_{11}=P_{22}=0.5,
+\]
+and the numerical output is therefore
+
+\[
+\boxed{
+E[D_1]=E[D_2]=2
+}
+\]
+periods.
+
+The duration statistic provides an intuitive interpretation of the two processes.
+If the low-consumption state is associated with unemployment or a negative
+income shock, Process 1 represents a permanent shock, whereas Process 2 implies
+an expected low-income spell of only two periods.
+
+The unconditional probability of low consumption is identical in the two
+models, but the welfare and policy implications of a temporary and a permanent
+income shock can be very different once households are allowed to save,
+borrow, or insure themselves.
+
+\subsection*{Certainty-Equivalent Consumption}
+
+The numerical values of lifetime utility are difficult to interpret directly.
+A useful welfare transformation is therefore the certainty-equivalent level of
+consumption. Let $c^{CE}$ denote the constant level of consumption that generates
+the same discounted lifetime utility $V$:
+
+\[
+V=
+\sum_{t=0}^{\infty}
+\beta^t u(c^{CE}).
+\]
+The Python computation gives, for $\gamma=2.5$,
+
+\[
+\boxed{
+c^{CE}=1.499283
+}
+\]
+for both processes.
+
+For $\gamma=4$, the result is
+
+\[
+\boxed{
+c^{CE}=1.256579
+}
+\]
+for both processes.
+
+As expected, the certainty equivalent falls as $\gamma$ rises. Greater curvature
+of the utility function makes the consumer more sensitive to low-consumption
+realizations, lowering the constant amount of consumption that the consumer
+regards as equivalent to the risky process.
+
+The equality of the certainty equivalents across the two models mirrors the
+equality of their ex ante expected utilities. Nevertheless, this result should
+not be interpreted as implying that persistence is generally irrelevant for
+welfare. It is a consequence of the particular preference specification used in
+the exercise, together with the fact that both processes have the same
+unconditional consumption distribution at every date.
+
+\section*{Discussion}
+
+The numerical results reveal a useful distinction between the marginal
+distribution of a stochastic process and its dynamic dependence structure.
+
+Both Markov processes satisfy
+
+\[
+\Pr(c_t=1)=\Pr(c_t=5)=0.5
+\]
+at every date. Consequently, they generate the same expected period utility and,
+under time-additive expected utility, the same ex ante discounted lifetime
+utility.
+
+However, their time-series properties are completely different. Under Process 1,
+consumption is perfectly persistent and each state is absorbing. Under Process 2,
+consumption is serially independent and expected state durations are finite.
+
+The likelihood and Bayesian calculations demonstrate that these differences can
+be identified from observed histories even though they cannot be detected from
+the unconditional distribution alone. A long spell in one state provides evidence
+in favor of a persistent process, while the observation of even a single switch
+immediately rules out a model in which transitions are impossible.
+
+The exercise therefore illustrates two complementary uses of Markov chains.
+From the consumer's perspective, the transition matrix determines forecasts and
+conditional lifetime values. From the econometrician's perspective, the same
+transition matrix determines the probability of observed histories and therefore
+provides the basis for likelihood-based model comparison and Bayesian learning.
+
+
+\section*{Reference}
+
+Ljungqvist, L. and Sargent, T. J. (2018).
+\textit{Recursive Macroeconomic Theory},
+4th edition, MIT Press.
+
+\end{document}
